@@ -10,7 +10,7 @@ def main():
     current_position = 50
 
     print(f'Zeros: {part1(puzzle_input, dial, current_position)}')
-    print(f'Zeros: {part2(puzzle_input, dial, current_position)}')
+    print(f'Zeros: {part2()}')
 
 def part1(puzzle_input, dial, current_position):
     zero_counter = 0
@@ -28,32 +28,20 @@ def part1(puzzle_input, dial, current_position):
     return zero_counter
 
 
-def part2(puzzle_input, dial, current_position, was_zero=False):
-    zero_counter = 0
-    for turn in puzzle_input:
-        current_position += get_direction(turn)
-        while current_position > len(dial):
-            if not was_zero:
-                zero_counter += 1
-            else:
-                was_zero = False
-            current_position -= len(dial)
-        while current_position < 0:
-            if not was_zero:
-                zero_counter += 1
-            else:
-                was_zero = False
-            current_position += len(dial)
+def part2():
+    from itertools import accumulate as acc
 
-        # print(current_position, get_direction(turn))
-        if current_position in [0, len(dial)]:
-            zero_counter += 1
-            current_position = 0
-            was_zero = True
-        else:
-            was_zero = False
+    a, b = [50], [50]
 
-    return zero_counter
+    for line in open('puzzleInput.txt'):
+        dir = {'L': -1, 'R': +1}[line[0]]
+        dist = int(line[1:])
+        a += [dir * dist]
+        b += [dir] * dist
+
+    for x in a, b:
+        print(sum(x % 100 == 0 for x in acc(x)))
+
 
 def get_direction(turn):
     num = int(turn.lstrip('LR'))

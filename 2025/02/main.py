@@ -10,7 +10,7 @@ def main():
     puzzle_input = get_nums(get_input())
 
     print(f'Part1: {part1(puzzle_input)}')
-    print(f'Part2: {part2()}')
+    print(f'Part2: {part2(puzzle_input)}')
 
 
 def get_nums(ranges):
@@ -35,8 +35,15 @@ def part1(ranges):
     return sum_ids
 
 
-def part2():
-    return 0
+def part2(ranges):
+    sum_ids = 0
+    regex = r'^(?P<number>\d+)(?P=number)+$'
+    for num_range in ranges:
+        for i in range(num_range[0], num_range[1] + 1):
+            if re.search(regex, str(i)):
+                sum_ids += i
+
+    return sum_ids
 
 
 if __name__ == '__main__':

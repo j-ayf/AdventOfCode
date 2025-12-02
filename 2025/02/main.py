@@ -25,19 +25,15 @@ def get_nums(ranges):
 
 
 def part1(ranges):
-    sum_ids = 0
-    regex = r'^(?P<number>\d+)(?P=number)$'
-    for num_range in ranges:
-        for i in range(num_range[0], num_range[1]+1):
-            if re.search(regex, str(i)):
-                sum_ids += i
-
-    return sum_ids
+    return run_regex(ranges, r'^(?P<number>\d+)(?P=number)$')
 
 
 def part2(ranges):
+    return run_regex(ranges, r'^(?P<number>\d+)(?P=number)+$')
+
+
+def run_regex(ranges, regex):
     sum_ids = 0
-    regex = r'^(?P<number>\d+)(?P=number)+$'
     for num_range in ranges:
         for i in range(num_range[0], num_range[1] + 1):
             if re.search(regex, str(i)):

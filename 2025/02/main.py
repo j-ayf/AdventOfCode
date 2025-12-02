@@ -1,4 +1,5 @@
 # https://adventofcode.com/2025/day/2
+import re
 
 def get_input():
     with open('puzzleInput.txt', 'r') as f:
@@ -25,15 +26,10 @@ def get_nums(ranges):
 
 def part1(ranges):
     sum_ids = 0
+    regex = r'^(?P<number>\d+)(?P=number)$'
     for num_range in ranges:
         for i in range(num_range[0], num_range[1]+1):
-            j = str(i)
-            if len(j) % 2 != 0:
-                continue
-            half_len = int(len(j)/2)
-            first = j[:half_len]
-            second = j[half_len:]
-            if first == second:
+            if re.search(regex, str(i)):
                 sum_ids += i
 
     return sum_ids

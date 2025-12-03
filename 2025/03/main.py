@@ -23,7 +23,7 @@ def part1(puzzle_input):
         for i in range(len(reversed_bank)):
             if i == 0: continue
             current_num = int(reversed_bank[i])
-            if current_num > max_num:
+            if current_num >= max_num:
                 max_num = current_num
                 index_1 = i
         max_num = 0

@@ -9,12 +9,10 @@ def get_input():
 
 
 def main():
-    puzzle_input = get_input()
-    ranges = puzzle_input[0]
-    item_ids = puzzle_input[1]
+    ranges, item_ids = get_input()
 
     print(f'Part1: {part1(ranges, item_ids)}')
-    print(f'Part2: {part2()}')
+    print(f'Part2: {part2(ranges)}')
 
 
 def part1(ranges, item_ids):
@@ -30,8 +28,26 @@ def part1(ranges, item_ids):
     return sum_spoiled
 
 
-def part2():
-    return 0
+def part2(ranges):
+    long_list = []
+    for id_range in ranges:
+        int_start, int_end = get_range_ints(id_range)
+        int_end += 1
+        if int_start in long_list and int_end in long_list:
+            continue
+        elif int_start not in long_list and int_end not in long_list:
+            long_list.extend(range(int_start, int_end))
+        elif int_start in long_list and int_end not in long_list:
+            for num in range(int_start, int_end):
+                if num not in long_list:
+                    long_list.extend(range(num, int_end))
+        elif int_start not in long_list and int_end in long_list:
+            for num in range(int_start, int_end):
+                if num not in long_list:
+                    long_list.extend(range(num, int_end))
+        else:
+            raise Exception(f'wtf {id_range}')
+    return len(long_list)
 
 
 def get_range_ints(str_range):
@@ -48,6 +64,42 @@ def is_in_range(range_start, range_end, item_id):
     return False
 
 
+def from_internet(filename):
+    from bisect import bisect
+    with open(filename) as f:
+        lines = f.readlines()
+    ranges = []
+    ingredients_ids = []
+    step = 0
+    for line in lines:
+        line = line[:-1]
+        if not line:
+            step += 1
+            continue
+        if step == 0:
+            start, end = map(int, line.split('-'))
+            end += 1
+            ix0 = bisect(ranges, start)
+            ix1 = bisect(ranges, end)
+            adding = []
+            if ix0 % 2 == 0:
+                adding.append(start)
+            if ix1 % 2 == 0:
+                adding.append(end)
+            ranges = ranges[:ix0] + adding + ranges[ix1:]
+        if step == 1:
+            ingredients_ids.append(int(line))
+    ans0 = 0
+    for ingredient_id in ingredients_ids:
+        ix = bisect(ranges, ingredient_id)
+        if ix % 2:
+            ans0 += 1
+    ans1 = 0
+    for ix in range(len(ranges)//2):
+        ans1 += ranges[2 * ix + 1] - ranges[2 * ix]
+    return (ans0, ans1)
+
 
 if __name__ == '__main__':
-    main()
+    # main()
+    print(from_internet('puzzleInput.txt'))

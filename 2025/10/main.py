@@ -35,7 +35,14 @@ def sanitize_input(data):
             joltage.append(int(button))
         return joltage
     else:
-        return strip_brackets(data)
+        data = strip_brackets(data)
+        lights = []
+        for light in data:
+            if light == '#':
+                lights.append(True)
+            else:
+                lights.append(False)
+        return lights
 
 
 def strip_brackets(string):
@@ -48,16 +55,42 @@ def main():
     puzzle_input = get_input()
     print(puzzle_input)  # todo: remove
 
-    print(f'Part1: {part1()}')
+    print(f'Part1: {part1(puzzle_input)}')
     print(f'Part2: {part2()}')
 
 
-def part1():
-    return 0
+def part1(puzzle):
+    sum_presses = 0
+    for machine in puzzle:
+        sum_presses += find_fewest_presses(machine)
+    return sum_presses
 
 
 def part2():
     return 0
+
+
+def find_fewest_presses(machine):
+    indicator_lights = machine[0]
+    button_schematics = machine[1]
+    fewest_presses = 99999999999
+    indicator_lights = press_button(indicator_lights, button_schematics[1])
+
+    return fewest_presses
+
+
+def press_button(indicator_lights, button):
+    for index in button:
+        indicator_lights = toggle_light(indicator_lights, index)
+    return indicator_lights
+
+
+def toggle_light(indicator_lights, index):
+    if indicator_lights[index]:
+        indicator_lights[index] = False
+    else:
+        indicator_lights[index] = True
+    return indicator_lights
 
 
 if __name__ == '__main__':

@@ -14,19 +14,22 @@ def get_input():
 def main():
     puzzle_input = get_input()
 
-    print(f'Part1: {part1(puzzle_input)}')
-    print(f'Part2: {part2()}')
+    # print(f'Part1: {part1(puzzle_input)}')
+    print(f'Part2: {part2(puzzle_input)}')
 
 
 def part1(devices):
     start_i = get_device_index(devices, 'you')
-    find_paths_to_out(devices, start_i)
-    global paths
-    return paths
+    find_paths_to_out1(devices, start_i)
+    global paths1
+    return paths1
 
 
-def part2():
-    return 0
+def part2(devices):
+    start_i = get_device_index(devices, 'svr')
+    find_paths_to_out2(devices, start_i, False, False)
+    global paths2
+    return paths2
 
 
 def get_device_index(devices, device_name):
@@ -35,17 +38,35 @@ def get_device_index(devices, device_name):
             return devices.index(device)
 
 
-def find_paths_to_out(devices, current_index):
+def find_paths_to_out1(devices, current_index):
     device = devices[current_index]
     for output in device[1]:
         if output == 'out':
-            global paths
-            paths += 1
+            global paths1
+            paths1 += 1
             return
         new_index = get_device_index(devices, output)
-        find_paths_to_out(devices, new_index)
+        find_paths_to_out1(devices, new_index)
+
+
+def find_paths_to_out2(devices, current_index, dac, fft):
+    device = devices[current_index]
+    for output in device[1]:
+        if output == 'out' and dac and fft:
+            global paths2
+            paths2 += 1
+            return
+        elif output == 'out':
+            return
+        elif output == 'dac':
+            dac = True
+        elif output == 'fft':
+            fft = True
+        new_index = get_device_index(devices, output)
+        find_paths_to_out2(devices, new_index, dac, fft)
 
 
 if __name__ == '__main__':
-    paths = 0
+    paths1 = 0
+    paths2 = 0
     main()

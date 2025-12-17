@@ -1,4 +1,4 @@
-# https://adventofcode.com/2015/day/2
+# https://adventofcode.com/2015/day/3
 
 def get_input():
     with open('input.txt', 'r') as f:
@@ -14,17 +14,24 @@ def part1(puzzle):
     current_coords = [0,0]
     delivered_presents = {str(current_coords): 1}
     for direction in puzzle:
-        current_coords =  get_new_coords(current_coords, direction)
-        if str(current_coords) in delivered_presents:
-            delivered_presents[str(current_coords)] += 1
-        else:
-            delivered_presents[str(current_coords)] = 1
+        delivered_presents, current_coords = deliver_presents(current_coords, direction, delivered_presents)
 
     return len(delivered_presents)
 
 
 def part2(puzzle):
-    return 0
+    santa_coords = [0, 0]
+    robot_coords = [0, 0]
+    delivered_presents = {str(santa_coords): 2}
+    for i in range(len(puzzle)):
+        if i % 2 == 0:
+            # santa
+            delivered_presents, santa_coords = deliver_presents(santa_coords, puzzle[i], delivered_presents)
+        else:
+            # robot
+            delivered_presents, robot_coords = deliver_presents(robot_coords, puzzle[i], delivered_presents)
+
+    return len(delivered_presents)
 
 
 def get_new_coords(current_coords, direction):
@@ -38,6 +45,16 @@ def get_new_coords(current_coords, direction):
         return [current_coords[0]-1, current_coords[1]]
     else:
         raise Exception(f'Invalid direction "{direction}"')
+
+
+def deliver_presents(current_coords, direction, delivered_presents):
+    current_coords = get_new_coords(current_coords, direction)
+    if str(current_coords) in delivered_presents:
+        delivered_presents[str(current_coords)] += 1
+    else:
+        delivered_presents[str(current_coords)] = 1
+
+    return delivered_presents, current_coords
 
 
 

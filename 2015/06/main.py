@@ -6,6 +6,7 @@ class Light:
         self.x = x
         self.y = y
         self.is_on = False
+        self.brightness = 0
 
     def on(self):
         self.is_on = True
@@ -18,6 +19,13 @@ class Light:
             self.is_on = False
         else:
             self.is_on = True
+
+    def increase_brightness(self, amount=1):
+        self.brightness += amount
+
+    def decrease_brightness(self):
+        if self.brightness > 0:
+            self.brightness -= 1
 
     def __repr__(self):
         return f'{self.x}, {self.y}, {self.is_on}'
@@ -61,7 +69,7 @@ def main():
     lights = make_lights()
 
     print(f'Part1: {part1(puzzle, lights)}')
-    print(f'Part2: {part2(puzzle)}')
+    print(f'Part2: {part2(puzzle, lights)}')
 
 
 def part1(puzzle, lights):
@@ -86,8 +94,25 @@ def part1(puzzle, lights):
     return total
 
 
-def part2(puzzle):
-    return 0
+def part2(puzzle, lights):
+    for instruction in puzzle:
+        start = instruction[1]
+        end = instruction[2]
+        for i in range(start[0], end[0]+1):
+            for j in range(start[1], end[1]+1):
+                light = lights[i][j]
+                if instruction[0] == 'on':
+                    light.increase_brightness()
+                if instruction[0] == 'off':
+                    light.decrease_brightness()
+                if instruction[0] == 'toggle':
+                    light.increase_brightness(2)
+
+    total_brightness = 0
+    for row in lights:
+        for light in row:
+            total_brightness += light.brightness
+    return total_brightness
 
 
 if __name__ == '__main__':

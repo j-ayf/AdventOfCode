@@ -8,7 +8,6 @@ def get_input():
 
 def main():
     puzzle = get_input()
-    print(puzzle)
 
     print(f'Part1: {part1(puzzle)}')
     print(f'Part2: {part2(puzzle)}')
@@ -28,7 +27,13 @@ def part1(puzzle):
 
 
 def part2(puzzle):
-    return 0
+    nice_strings = 0
+    for s in puzzle:
+        pairs = re.search(r'(?P<pair>\w{2}).*(?P=pair)', s)
+        repeat = re.search(r'(?P<repeat>\w)\w(?P=repeat)', s)
+        if pairs and repeat:
+            nice_strings += 1
+    return nice_strings
 
 
 if __name__ == '__main__':

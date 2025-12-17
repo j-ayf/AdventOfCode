@@ -1,4 +1,6 @@
-# https://adventofcode.com/2015/day/2
+# https://adventofcode.com/2015/day/5
+import re
+
 
 def get_input():
     with open('input.txt', 'r') as f:
@@ -12,7 +14,17 @@ def main():
     print(f'Part2: {part2(puzzle)}')
 
 def part1(puzzle):
-    return 0
+    nice_strings = 0
+    for s in puzzle:
+        vowels = re.findall(r'[aeiou]', s)
+        double = re.search(r'(?P<double>\w)(?P=double)', s)
+        bad = re.search(r'ab|cd|pq|xy', s)
+        if bad:
+            continue
+        if double and len(vowels) >= 3:
+            nice_strings += 1
+
+    return nice_strings
 
 
 def part2(puzzle):

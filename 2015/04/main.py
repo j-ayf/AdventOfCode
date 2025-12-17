@@ -13,18 +13,22 @@ def main():
     print(f'Part2: {part2(puzzle)}')
 
 def part1(puzzle):
+    return get_advent_coin(puzzle, 5)
+
+
+def part2(puzzle):
+    return get_advent_coin(puzzle, 6)
+
+
+def get_advent_coin(puzzle, leading_zeroes):
     i = 0
     while True:
         s = f'{puzzle}{i}'
         h = hashlib.md5(s.encode()).hexdigest()
-        if re.search(r"^0{5}\w+", h):
+        regex = r'^0{' + re.escape(str(leading_zeroes)) + r'}\w+'
+        if re.search(regex, h):
             return i
         i += 1
-
-
-def part2(puzzle):
-    return 0
-
 
 if __name__ == '__main__':
     main()
